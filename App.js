@@ -1,6 +1,6 @@
 import React from 'react';
-import Home from './screens/Home';
+import ResturantDetails from './screens/ResturantDetails';
 
 export default function App() {
-  return <Home />;
+  return <ResturantDetails />;
 }
