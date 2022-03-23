@@ -1,11 +1,13 @@
 import { View, Image, Text } from 'react-native';
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { localRestaurants } from '../../utils/products';
 
 export default function About(props) {
-  const { name, image, price, reviews, rating, categories, id } =
+  const { name, image, price, reviews, rating, categories } =
     props.route.params;
 
-  const formattedCategories = categories.map((c) => c.title.join('.'));
+  const formattedCategories = categories.map((c) => c?.title?.join('.'));
 
   const description = `${formattedCategories} ${
     price ? ' • ' + price : ''
@@ -23,7 +25,7 @@ const ResturantImage = (props) => (
   <Image source={{ uri: props.image }} style={{ width: '100%', height: 180 }} />
 );
 
-const ResturantName = (props) => {
+const ResturantName = (props) => (
   <Text
     style={{
       fontSize: 29,
@@ -33,8 +35,8 @@ const ResturantName = (props) => {
     }}
   >
     {props.name}
-  </Text>;
-};
+  </Text>
+);
 
 const RestaurantDescription = (props) => (
   <Text

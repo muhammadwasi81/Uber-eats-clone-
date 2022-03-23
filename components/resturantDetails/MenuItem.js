@@ -1,14 +1,32 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import React from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { Divider } from 'react-native-elements';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function MenuItem({
-  restaurantName,
+  resturantName,
   foods,
   hideCheckBox,
   marginLeft,
 }) {
+  const dispatch = useDispatch();
+
+  const selectItem = (item, checkboxValue) => {
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: {
+        ...item,
+        resturantName: resturantName,
+        checkBoxValue: checkboxValue,
+      },
+    });
+  };
+
+  const cartItems = useSelector(
+    (state) => state.cartReducer.selectedItem.items
+  );
+
   const isFoodInCart = (food, cartItems) => {
     Boolean(cartItems.find((item) => item.title === food.title));
   };
@@ -24,10 +42,8 @@ export default function MenuItem({
               <BouncyCheckbox
                 iconStyle={{ borderColor: 'lightgray', borderRadius: 0 }}
                 fillColor="green"
-                isChecked={isFoodCart(food, cartItem)}
-                onPress={(checkboxValue) => {
-                  selectItem(food, checkboxValue);
-                }}
+                isChecked={isFoodInCart(food, cartItems)}
+                onPress={(checkboxValue) => selectItem(food, checkboxValue)}
               />
             )}
             <FoodInfo food={food} />
@@ -44,15 +60,15 @@ export default function MenuItem({
   );
 }
 
-const FoodInfo = (props) => {
+const FoodInfo = (props) => (
   <View style={{ width: 240, justifyContent: 'space-evenly' }}>
     <Text style={styles.titleStyle}>{props.food.title}</Text>
     <Text>{props.food.description}</Text>
     <Text>{props.food.price}</Text>
-  </View>;
-};
+  </View>
+);
 
-const FoodImage = ({ marginLeft, ...props }) => {
+const FoodImage = ({ marginLeft, ...props }) => (
   <View>
     <Image
       source={{ uri: props.food.image }}
@@ -63,8 +79,8 @@ const FoodImage = ({ marginLeft, ...props }) => {
         marginLeft: marginLeft,
       }}
     />
-  </View>;
-};
+  </View>
+);
 
 const styles = StyleSheet.create({
   menuItemStyle: {
